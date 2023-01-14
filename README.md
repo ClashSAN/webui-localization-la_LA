@@ -1,6 +1,11 @@
 **Stable Diffusion web UI** is a browser interface for Stable Diffusion based on Gradio library.
 
-- [Features](Features)
+- [Features](https://github.com/ClashSAN/webui-localization-la_LA/blob/wikitest/Features.md)
+  
+  
+  
+  
+  
   - [Textual Inversion](Textual-Inversion)
   - [Negative prompt](Negative-prompt)
 - [Seed breaking changes](Seed-breaking-changes)
