@@ -1,540 +1,415 @@
-This is a feature showcase page for [Stable Diffusion web UI](https://github.com/AUTOMATIC1111/stable-diffusion-webui).
+Dies ist eine Feature-Showcase-Seite für die Web-Benutzeroberfläche von Stable Diffusion .
 
-All examples are non-cherrypicked unless specified otherwise.
+Alle Beispiele sind nicht-herausgepickt, sofern nicht anders angegeben.
 
+Alt-Diffusion
+Das Modell ist darauf trainiert, Eingaben in verschiedenen Sprachen zu akzeptieren. Weitere Informationen: https://arxiv.org/abs/2211.06679
 
-# Alt-Diffusion
-Model trained to accept inputs in different languages. More info: https://arxiv.org/abs/2211.06679
+Laden Sie den Checkpoint von drive.filen.io herunter
+lege es ins models/Stable-DiffusionVerzeichnis
+holen Sie sich die Konfiguration von configs/alt-diffusion-inference.yamlund legen Sie sie an der gleichen Stelle wie der Checkpoint ab, und benennen Sie sie so um, dass sie denselben Dateinamen hat (dh wenn Ihr Checkpoint heißt ad.ckpt, sollte die Konfiguration benannt werden ad.yaml)
+Wählen Sie den neuen Kontrollpunkt in der Benutzeroberfläche aus
+Mechanisch wird der Aufmerksamkeits-/Hervorhebungsmechanismus (siehe unten in den Funktionen) unterstützt, scheint aber viel weniger Wirkung zu haben, wahrscheinlich aufgrund der Art und Weise, wie Alt-Diffusion implementiert ist. Das Überspringen von Clips wird nicht unterstützt, die Einstellung wird ignoriert.
 
-- download the checkpoint from [drive.filen.io](https://drive.filen.io/d/be043c9e-a171-4356-a749-e7840dfcb67e#Z21U5JO7HE5g1fSa7kY5nSZI2dInaUHw)
-- put it into `models/Stable-Diffusion` directory
-- grab the config from [`configs/alt-diffusion-inference.yaml`](https://github.com/AUTOMATIC1111/stable-diffusion-webui/blob/master/configs/alt-diffusion-inference.yaml) and put it into same place as the checkpoint, renaming it to have same filename (i.e. if your checkpoint is named `ad.ckpt`, the config should be named `ad.yaml`)
-- select the new checkpoint from the UI
+Weitere Informationen finden Sie in der PR: https://github.com/AUTOMATIC1111/stable-diffusion-webui/pull/5238
 
-Mechanically, attention/emphasis mechanism (see below in features) is supported, but seems to have much less effect, probably due to how Alt-Diffusion is implemented. Clip skip is not supported, the setting is ignored.
+Stalldiffusion 2.0
+Basismodelle
+Modelle werden unterstützt: 768-v-ema.ckpt ( model , config ) und 512-base-ema.ckpt ( model , config ). 2.1 Checkpoints sollten auch funktionieren.
 
-See the PR for more info: https://github.com/AUTOMATIC1111/stable-diffusion-webui/pull/5238
+Laden Sie den Checkpoint herunter (von hier: https://huggingface.co/stabilityai/stable-diffusion-2 )
+lege es ins models/Stable-DiffusionVerzeichnis
+Holen Sie sich die Konfiguration aus dem SD2.0-Repository und legen Sie sie an derselben Stelle wie den Checkpoint ab, und benennen Sie sie so um, dass sie denselben Dateinamen hat (dh wenn Ihr Checkpoint heißt 768-v-ema.ckpt, sollte die Konfiguration benannt werden 768-v-ema.yaml)
+Wählen Sie den neuen Kontrollpunkt in der Benutzeroberfläche aus
+Die Zuglasche wird höchstwahrscheinlich für die 2.0-Modelle kaputt sein.
 
-# Stable Diffusion 2.0
-## Basic models
-Models are supported: 768-v-ema.ckpt ([model](https://huggingface.co/stabilityai/stable-diffusion-2/blob/main/768-v-ema.ckpt), [config](https://raw.githubusercontent.com/Stability-AI/stablediffusion/main/configs/stable-diffusion/v2-inference-v.yaml)) and 512-base-ema.ckpt ([model](https://huggingface.co/stabilityai/stable-diffusion-2-base/blob/main/512-base-ema.ckpt), [config](https://raw.githubusercontent.com/Stability-AI/stablediffusion/main/configs/stable-diffusion/v2-inference.yaml)). 2.1 checkpoints should also work.
+Wenn 2.0 oder 2.1 schwarze Bilder erzeugt, aktivieren Sie die volle Präzision mit --no-halfoder versuchen Sie es mit der --xformersOptimierung.
 
-- download the checkpoint (from here: https://huggingface.co/stabilityai/stable-diffusion-2)
-- put it into `models/Stable-Diffusion` directory
-- grab the config from SD2.0 repository and put it into same place as the checkpoint, renaming it to have same filename (i.e. if your checkpoint is named `768-v-ema.ckpt`, the config should be named `768-v-ema.yaml`)
-- select the new checkpoint from the UI
+Hinweis: SD 2.0 und 2.1 reagieren aufgrund ihres neuen Cross-Attention-Modulsempfindlicher auf die numerische Instabilität von FP16 (wie von ihnen selbst hier angemerkt).
 
-Train tab will most likely be broken for the 2.0 models.
+Auf fp16: Kommentar zum Aktivieren in webui-user.bat:
 
-If 2.0 or 2.1 is generating black images, enable full precision with `--no-half` or try using the `--xformers` optimization.
+@echo off
 
-_**Note:**_ SD 2.0 and 2.1 are more sensitive to FP16 numerical instability (as noted by themselves [here](https://github.com/Stability-AI/stablediffusion/commit/c12d960d1ee4f9134c2516862ef991ec52d3f59e)) due to their new cross attention module.
+set PYTHON=
+set GIT=
+set VENV_DIR=
+set COMMANDLINE_ARGS=your command line options
+set STABLE_DIFFUSION_COMMIT_HASH="c12d960d1ee4f9134c2516862ef991ec52d3f59e"
+set ATTN_PRECISION=fp16
 
-On fp16: [comment](https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/5503#issuecomment-1341495770) to enable, in webui-user.bat:
+call webui.bat
+Tiefengeführtes Modell
+Weitere Informationen . PR . Anweisungen:
 
-    @echo off
+Laden Sie den Checkpoint 512-deep-ema.ckpt herunter
+platzieren Sie es in Modellen/Stable-Diffusion
+Nehmen Sie die Konfiguration und legen Sie sie im selben Ordner wie den Checkpoint ab
+Benennen Sie die Konfiguration um in512-depth-ema.yaml
+Wählen Sie den neuen Kontrollpunkt in der Benutzeroberfläche aus
+Das tiefengeführte Modell funktioniert nur auf der Registerkarte img2img.
 
-    set PYTHON=
-    set GIT=
-    set VENV_DIR=
-    set COMMANDLINE_ARGS=your command line options
-    set STABLE_DIFFUSION_COMMIT_HASH="c12d960d1ee4f9134c2516862ef991ec52d3f59e"
-    set ATTN_PRECISION=fp16
+Übermalen
+Outpainting erweitert das Originalbild und übermalt den entstandenen leeren Raum.
 
-    call webui.bat
+Beispiel:
 
-## Depth-guided model
-[More info](https://github.com/Stability-AI/stablediffusion#depth-conditional-stable-diffusion). [PR](https://github.com/AUTOMATIC1111/stable-diffusion-webui/pull/5542).
-Instructions:
-- download the [512-depth-ema.ckpt](https://huggingface.co/stabilityai/stable-diffusion-2-depth) checkpoint
-- place it in models/Stable-diffusion
-- grab the [config](https://raw.githubusercontent.com/Stability-AI/stablediffusion/main/configs/stable-diffusion/v2-midas-inference.yaml) and place it in the same folder as the checkpoint
-- rename the config to `512-depth-ema.yaml`
-- select the new checkpoint from the UI
+Original	Übermalen	Mal wieder übermalen
+		
+Originalbild von anonymem Benutzer von 4chan. Danke, anonymer Benutzer.
 
-The depth-guided model will only work in img2img tab.
+Sie finden die Funktion im img2img-Tab ganz unten unter Script -> Poor man's outpainting.
 
-# Outpainting
+Outpainting scheint im Gegensatz zur normalen Bilderzeugung sehr von einer großen Schrittzahl zu profitieren. Ein Rezept für ein gutes Outpainting ist eine gute Eingabeaufforderung, die zum Bild passt, Schieberegler für Entrauschen und CFG-Skala auf Maximum eingestellt und eine Schrittzahl von 50 bis 100 mit Euler-Ahnen- oder DPM2-Ahnen-Samplern.
 
-Outpainting extends the original image and inpaints the created empty space.
+81 Schritte, Euler A	30 Schritte, Euler A	10 Schritte, Euler A	80 Stufen, Euler A
+			
+Malen
+Zeichnen Sie auf der Registerkarte img2img eine Maske über einen Teil des Bildes, und dieser Teil wird eingemalt.
 
-Example:
 
-| Original                     | Outpainting                   | Outpainting again            |
-|------------------------------|------------------------------|------------------------------|
-| ![](images/outpainting-1.png) | ![](images/outpainting-2.png) | ![](images/outpainting-3.png) |
 
-Original image by Anonymous user from 4chan. Thank you, Anonymous user.
+Optionen zum Einfärben:
 
-You can find the feature in the img2img tab at the bottom, under Script -> Poor man's outpainting.
+im Webeditor selbst eine Maske zeichnen
+Löschen Sie einen Teil des Bildes in einem externen Editor und laden Sie ein transparentes Bild hoch. Auch leicht transparente Bereiche werden Teil der Maske. Beachten Sie, dass einige Editoren vollständig transparente Bereiche standardmäßig als schwarz speichern.
+ändere den Modus (unten rechts im Bild) auf "Maske hochladen" und wähle ein separates Schwarz-Weiß-Bild für die Maske (weiß = inpaint).
+Modell bemalen
+RunwayML hat ein zusätzliches Modell trainiert, das speziell für das Inpainting entwickelt wurde. Dieses Modell akzeptiert zusätzliche Eingaben - das anfängliche Bild ohne Rauschen plus die Maske - und scheint bei der Arbeit viel besser zu sein.
 
-Outpainting, unlike normal image generation, seems to profit very much from large step count. A recipe for a good outpainting
-is a good prompt that matches the picture, sliders for denoising and CFG scale set to max, and step count of 50 to 100 with
-Euler ancestral or DPM2 ancestral samplers.
+Download und zusätzliche Informationen für das Modell finden Sie hier: https://github.com/runwayml/stable-diffusion#inpainting-with-stable-diffusion
 
-| 81 steps, Euler A                   | 30 steps, Euler A                     | 10 steps, Euler A                    | 80 steps, Euler A                   |
-|-------------------------------------|---------------------------------------|--------------------------------------|-------------------------------------|
-| ![](images/inpainting-81-euler-a.png) | ![](images/inpainting-30-euler-a.png) | ![](images/inpainting-10-euler-a.png) | ![](images/inpainting-80-dpm2-a.png) |
+Um das Modell zu verwenden, müssen Sie den Prüfpunkt so umbenennen, dass sein Dateiname auf endet inpainting.ckpt, z. B. 1.5-inpainting.ckpt.
 
-# Inpainting
-In img2img tab, draw a mask over a part of the image, and that part will be in-painted.
+Wählen Sie danach einfach den Kontrollpunkt aus, wie Sie normalerweise jeden Kontrollpunkt auswählen würden, und Sie können loslegen.
 
-![](images/inpainting.png)
+Maskierter Inhalt
+Das maskierte Inhaltsfeld bestimmt, dass Inhalt platziert wird, um ihn in die maskierten Bereiche zu platzieren, bevor sie eingefärbt werden.
 
-Options for inpainting:
-- draw a mask yourself in the web editor
-- erase a part of the picture in an external editor and upload a transparent picture. Any even slightly transparent areas will become part of the mask. Be aware that [some editors](https://docs.krita.org/en/reference_manual/layers_and_masks/split_alpha.html#how-to-save-a-png-texture-and-keep-color-values-in-fully-transparent-areas) save completely transparent areas as black by default.
-- change mode (to the bottom right of the picture) to "Upload mask" and choose a separate black and white image for the mask (white=inpaint).
+Maske	füllen	Original	latentes Rauschen	latent nichts
+				
+Inpaint-Bereich
+Normalerweise ändert das Inpainting das Bild auf die Zielauflösung, die in der Benutzeroberfläche angegeben ist. Bei Inpaint area: Only masked aktivierter Option wird nur die Größe des maskierten Bereichs geändert und nach der Verarbeitung wieder in das Originalbild eingefügt. Dadurch können Sie mit großen Bildern arbeiten und das eingemalte Objekt mit einer viel höheren Auflösung rendern.
 
-## Inpainting model
-RunwayML has trained an additional model specifically designed for inpainting. This model accepts additional inputs - the initial image without noise plus the mask - and seems to be much better at the job.
+Eingang	Inpaint-Bereich: Ganzes Bild	Inpaint-Bereich: Nur maskiert
+		
+Maskierungsmodus
+Es gibt zwei Optionen für den maskierten Modus:
 
-Download and extra info for the model is here: https://github.com/runwayml/stable-diffusion#inpainting-with-stable-diffusion
+Maskiert einfärben - Der Bereich unter der Maske wird eingefärbt
+Inpaint nicht maskiert - unter der Maske bleibt unverändert, alles andere ist inpaint
+Alpha-Maske
+Eingang	Ausgabe
+	
+Prompt-Matrix
+Trennen Sie mehrere Eingabeaufforderungen mithilfe des |Zeichens, und das System erstellt ein Bild für jede Kombination davon. Wenn Sie beispielsweise die a busy city street in a modern city|illustration|cinematic lightingEingabeaufforderung verwenden, sind vier Kombinationen möglich (der erste Teil der Eingabeaufforderung wird immer beibehalten):
 
-To use the model, you must rename the checkpoint so that its filename ends in `inpainting.ckpt`, for example, `1.5-inpainting.ckpt`.
+a busy city street in a modern city
+a busy city street in a modern city, illustration
+a busy city street in a modern city, cinematic lighting
+a busy city street in a modern city, illustration, cinematic lighting
+Es werden vier Bilder in dieser Reihenfolge erstellt, alle mit demselben Startwert und jeweils mit einer entsprechenden Eingabeaufforderung: 
 
-After that just select the checkpoint as you'd usually select any checkpoint and you're good to go.
+Ein weiteres Beispiel, diesmal mit 5 Prompts und 16 Variationen: 
 
-## Masked content
-The masked content field determines content is placed to put into the masked regions before they are inpainted.
+Sie finden die Funktion ganz unten unter Skript -> Eingabeaufforderungsmatrix.
 
-| mask                                            | fill                                            | original                                            | latent noise                                            | latent nothing                                            |
-|-------------------------------------------------|-------------------------------------------------|-----------------------------------------------------|---------------------------------------------------------|-----------------------------------------------------------|
-| ![](images/inpainting-initial-content-mask.png) | ![](images/inpainting-initial-content-fill.png) | ![](images/inpainting-initial-content-original.png) | ![](images/inpainting-initial-content-latent-noise.png) | ![](images/inpainting-initial-content-latent-nothing.png) |
+Farbskizze
+Grundlegendes Malwerkzeug für img2img. Um diese Funktion in img2img zu verwenden, aktivieren Sie sie mit --gradio-img2img-tool color-sketchin commandline args. Um diese Funktion im Inpainting-Modus zu verwenden, aktivieren Sie mit --gradio-inpaint-tool color-sketch. Chromium-basierte Browser unterstützen ein Dropper-Tool. (siehe Bild)
 
-## Inpaint area
-Normally, inpainting resizes the image to the target resolution specified in the UI. With `Inpaint area: Only masked`
-enabled, only the masked region is resized, and after processing it is pasted back to the original picture.
-This allows you to work with large pictures and render the inpainted object at a much larger resolution.
+Tropfer
 
+Stabile Diffusion der gehobenen Klasse
+Hochskalieren Sie das Bild mit RealESRGAN/ESRGAN und gehen Sie dann die Kacheln des Ergebnisses durch und verbessern Sie sie mit img2img. Es hat auch eine Option, mit der Sie den Upscaling-Teil selbst in einem externen Programm durchführen und einfach mit img2img die Kacheln durchgehen können.
 
-| Input                               | Inpaint area: Whole picture                   | Inpaint area: Only masked       |
-|-------------------------------------|----------------------------------|-----------------------------------|
-| ![](images/inpaint-whole-mask.png)  | ![](images/inpaint-whole-no.png) | ![](images/inpaint-whole-yes.png) |
+Ursprüngliche Idee von: https://github.com/jquesnelle/txt2imghd . Dies ist eine unabhängige Implementierung.
 
+Um diese Funktion zu verwenden, wählen Sie SD upscale from the scripts dropdown selection(img2img tab).
 
-## Masking mode
-There are two options for masked mode:
-- Inpaint masked - the region under the mask is inpainted
-- Inpaint not masked - under the mask is unchanged, everything else is inpainted
+chrome_dl8hcMPYcx
 
-## Alpha mask
+Das Eingabebild wird auf das Doppelte der ursprünglichen Breite und Höhe hochskaliert, und die Schieberegler für Breite und Höhe der Benutzeroberfläche geben die Größe der einzelnen Kacheln an. Aufgrund der Überlappung kann die Größe der Kachel sehr wichtig sein: Ein 512 x 512-Bild benötigt neun 512 x 512-Kacheln (wegen der Überlappung), aber nur vier 640 x 640-Kacheln.
 
-| Input                        | Output                        |
-|------------------------------|-------------------------------|
-| ![](images/inpaint-mask.png) | ![](images/inpaint-mask2.png) |
+Empfohlene Parameter für die Hochskalierung:
 
+Stichprobenverfahren: Euler a
+Denoising-Stärke: 0,2, kann auf 0,4 steigen, wenn Sie abenteuerlustig sind
+Original	EchtESRGAN	Topas Gigapixel	SD-gehoben
+			
+			
+			
+Aufmerksamkeit/Betonung
+Die Verwendung ()in der Eingabeaufforderung erhöht die Aufmerksamkeit des Modells für eingeschlossene Wörter und []verringert sie. Sie können mehrere Modifikatoren kombinieren:
 
-# Prompt matrix
-Separate multiple prompts using the `|` character, and the system will produce an image for every combination of them.
-For example, if you use `a busy city street in a modern city|illustration|cinematic lighting` prompt, there are four combinations possible (first part of the prompt is always kept):
 
-- `a busy city street in a modern city`
-- `a busy city street in a modern city, illustration`
-- `a busy city street in a modern city, cinematic lighting`
-- `a busy city street in a modern city, illustration, cinematic lighting`
 
-Four images will be produced, in this order, all with the same seed and each with a corresponding prompt:
-![](images/prompt-matrix.png)
+Spickzettel:
 
-Another example, this time with 5 prompts and 16 variations:
-![](images/prompt_matrix.jpg)
+a (word)- Aufmerksamkeit um wordden Faktor 1,1 steigern
+a ((word))- Aufmerksamkeit um wordden Faktor 1,21 erhöhen (= 1,1 * 1,1)
+a [word]- Aufmerksamkeit um wordden Faktor 1,1 verringern
+a (word:1.5)- Aufmerksamkeit um wordden Faktor 1,5 steigern
+a (word:0.25)- Aufmerksamkeit um wordden Faktor 4 verringern (= 1 / 0,25)
+a \(word\)- Verwenden Sie wörtliche ()Zeichen in der Eingabeaufforderung
+Mit ()kann ein Gewicht wie folgt angegeben werden: (text:1.4). Wenn das Gewicht nicht angegeben ist, wird es mit 1,1 angenommen. Die Gewichtsangabe funktioniert nur mit ()nicht mit [].
 
-You can find the feature at the bottom, under Script -> Prompt matrix.
+Wenn Sie eines der wörtlichen Zeichen in der Eingabeaufforderung verwenden möchten, verwenden Sie ()[]den umgekehrten Schrägstrich, um sie zu maskieren: anime_\(character\).
 
-# Color Sketch
+Am 29.09.2022 wurde eine neue Implementierung hinzugefügt, die Escape-Zeichen und numerische Gewichtungen unterstützt. Ein Nachteil der neuen Implementierung ist, dass die alte nicht perfekt war und manchmal Zeichen fraß: "a (((farm))), daytime" würde beispielsweise ohne das Komma zu "a farm daytime" werden. Dieses Verhalten wird von der neuen Implementierung nicht geteilt, die den gesamten Text korrekt beibehält, und dies bedeutet, dass Ihre gespeicherten Seeds möglicherweise unterschiedliche Bilder erzeugen. Momentan gibt es in den Einstellungen eine Option, um die alte Implementierung zu verwenden.
 
-Basic coloring tool for img2img. To use this feature in img2img, enable with `--gradio-img2img-tool color-sketch` in commandline args. To use this feature in inpainting mode, enable with `--gradio-inpaint-tool color-sketch`. Chromium-based browsers support a dropper tool. (see picture)
+NAI verwendet meine Implementierung von vor dem 29.09.2022, außer dass sie 1,05 als Multiplikator haben und {}anstelle von verwenden (). Es gilt also die Umrechnung:
 
-![dropper](https://user-images.githubusercontent.com/98228077/196140222-54bc71ad-2746-4c38-8075-5c53fbcde2a9.png)
+ihr {word}= unser(word:1.05)
+ihr {{word}}= unser(word:1.1025)
+ihr [word]= unser (word:0.952)(0,952 = 1/1,05)
+ihr [[word]]= unser (word:0.907)(0,907 = 1/1,05/1,05)
+Schleife
+Wenn Sie das Loopback-Skript in img2img auswählen, können Sie das Ausgabebild automatisch als Eingabe für den nächsten Stapel einspeisen. Entspricht dem Speichern des Ausgabebildes und dem Ersetzen des Eingabebildes durch dieses. Die Einstellung für die Stapelanzahl steuert, wie viele Iterationen Sie davon erhalten.
 
+Normalerweise würden Sie dabei eines von vielen Bildern für die nächste Iteration selbst auswählen, daher ist die Nützlichkeit dieser Funktion möglicherweise fraglich, aber ich habe damit einige sehr schöne Ergebnisse erzielt, die ich nicht erhalten konnte Andernfalls.
 
-# Stable Diffusion upscale
-Upscale image using RealESRGAN/ESRGAN and then go through tiles of the result, improving them with img2img.
-It also has an option to let you do the upscaling part yourself in an external program, and just go through tiles with img2img.
+Beispiel: (herausgepicktes Ergebnis)
 
-Original idea by: https://github.com/jquesnelle/txt2imghd. This is an independent implementation.
 
-To use this feature, select `SD upscale from the scripts dropdown selection` (img2img tab).
 
-![chrome_dl8hcMPYcx](https://user-images.githubusercontent.com/39339941/193300082-be3b8864-3c28-44b7-bb75-f893f92269b6.png)
+Originalbild von anonymem Benutzer von 4chan. Danke, anonymer Benutzer.
 
-The input image will be upscaled to twice the original
-width and height, and UI's width and height sliders specify the size of individual tiles. Because of overlap,
-the size of the tile can be very important: 512x512 image needs nine 512x512 tiles (because of overlap), but only
-four 640x640 tiles.
+X/Y-Plot
+Erstellt ein Raster aus Bildern mit unterschiedlichen Parametern. Wählen Sie mithilfe von Feldern vom Typ X und Y aus, welche Parameter von Zeilen und Spalten gemeinsam genutzt werden sollen, und geben Sie diese Parameter durch Komma getrennt in die Felder X-Werte/Y-Werte ein. Für Integer- und Fließkommazahlen werden auch Bereiche unterstützt. Beispiele:
 
-Recommended parameters for upscaling:
- - Sampling method: Euler a
- - Denoising strength: 0.2, can go up to 0.4 if you feel adventurous
+Einfache Bereiche:
+1-5= 1, 2, 3, 4, 5
+Bereiche mit Schrittweite in Klammern:
+1-5 (+2)= 1, 3, 5
+10-5 (-3)= 10, 7
+1-3 (+0.5)= 1, 1,5, 2, 2,5, 3
+Bereiche mit der Anzahl in eckigen Klammern:
+1-10 [5]= 1, 3, 5, 7, 10
+0.0-1.0 [6]= 0,0, 0,2, 0,4, 0,6, 0,8, 1,0
 
-| Original                                  | RealESRGAN                                  | Topaz Gigapixel                                         | SD upscale                                  |
-|-------------------------------------------|---------------------------------------------|---------------------------------------------------------|---------------------------------------------|
-| ![](images/sd-upscale-robot-original.png) | ![](images/sd-upscale-robot-realesrgan.png) | ![](images/sd-upscale-robot-esrgan-topaz-gigapixel.png) | ![](images/sd-upscale-robot-sd-upscale.png) |
-| ![](images/sd-upscale-castle-original.png) | ![](images/sd-upscale-castle-realesrgan.png) | ![](images/sd-upscale-castle-esrgan-topaz-gigapixel.png) | ![](images/sd-upscale-castle-sd-upscale.png) |
-| ![](images/sd-upscale-city-original.png)  | ![](images/sd-upscale-city-realesrgan.png)  | ![](images/sd-upscale-city-esrgan-topaz-gigapixel.png)  | ![](images/sd-upscale-city-sd-upscale.png)  |
 
-# Attention/emphasis
-Using `()` in the prompt increases the model's attention to enclosed words, and `[]` decreases it. You can combine multiple modifiers:
+Hier sind die Einstellungen, die das obige Diagramm erstellen:
 
-![](images/attention-3.jpg)
 
-Cheat sheet:
 
- - `a (word)` - increase attention to `word` by a factor of 1.1
- - `a ((word))` - increase attention to `word` by a factor of 1.21 (= 1.1 * 1.1)
- - `a [word]` - decrease attention to `word` by a factor of 1.1
- - `a (word:1.5)` - increase attention to `word` by a factor of 1.5
- - `a (word:0.25)` - decrease attention to `word` by a factor of 4 (= 1 / 0.25)
- - `a \(word\)` - use literal `()` characters in prompt
+Aufforderung S/R
+Prompt S/R ist eine der schwieriger zu verstehenden Betriebsarten für X/Y-Plot. S/R steht für Suchen/Ersetzen, und genau das tut es - Sie geben eine Liste von Wörtern oder Phrasen ein, es nimmt das erste aus der Liste und behandelt es als Schlüsselwort und ersetzt alle Instanzen dieses Schlüsselworts durch andere Einträge aus der Liste .
 
-With `()`, a weight can be specified like this: `(text:1.4)`. If the weight is not specified, it is assumed to be 1.1. Specifying weight only works with `()` not with `[]`.
+Beispielsweise erhalten Sie mit prompt a man holding an apple, 8k cleanund Prompt S/R an apple, a watermelon, a gundrei Eingabeaufforderungen:
 
-If you want to use any of the literal `()[]` characters in the prompt, use the backslash to escape them: `anime_\(character\)`.
+a man holding an apple, 8k clean
+a man holding a watermelon, 8k clean
+a man holding a gun, 8k clean
+Die Liste verwendet dieselbe Syntax wie eine Zeile in einer CSV-Datei. Wenn Sie also Kommas in Ihre Einträge einfügen möchten, müssen Sie Text in Anführungszeichen setzen und sicherstellen, dass zwischen Anführungszeichen und trennenden Kommas kein Leerzeichen steht:
 
-On 2022-09-29, a new implementation was added that supports escape characters and numerical weights. A downside of the new implementation is that the old one was not perfect and sometimes ate characters: "a (((farm))), daytime", for example, would become "a farm daytime" without the comma. This behavior is not shared by the new implementation which preserves all text correctly, and this means that your saved seeds may produce different pictures. For now, there is an option in settings to use the old implementation.
+darkness, light, green, heat- 4 Artikel - darkness, light, green,heat
+darkness, "light, green", heat- FALSCH - 4 Artikel - darkness, "light, green",heat
+darkness,"light, green",heat- RECHTS - 3 Artikel - darkness, light, green,heat
+Textuelle Umkehrung
+Kurze Erklärung: Legen Sie Ihre Einbettungen in das embeddingsVerzeichnis und verwenden Sie den Dateinamen in der Eingabeaufforderung.
 
-NAI uses my implementation from before 2022-09-29, except they have 1.05 as the multiplier and use `{}` instead of `()`. So the conversion applies:
+Lange Erklärung: Textuelle Inversion
 
- - their `{word}` = our `(word:1.05)`
- - their `{{word}}` = our `(word:1.1025)`
- - their `[word]` = our `(word:0.952)` (0.952 = 1/1.05)
- - their `[[word]]` = our `(word:0.907)` (0.907 = 1/1.05/1.05)
+Gitter-0037
 
+Größe ändern
+Es gibt drei Optionen zum Ändern der Größe von Eingabebildern im img2img-Modus:
 
-# Loopback
-Selecting the loopback script in img2img allows you to automatically feed output image as input for the next batch. Equivalent to
-saving output image, and replacing the input image with it. Batch count setting controls how many iterations of
-this you get.
+Nur Größe ändern - Ändert einfach die Größe des Quellbildes auf die Zielauflösung, was zu einem falschen Seitenverhältnis führt
+Zuschneiden und Größe ändern - Ändern Sie die Größe des Quellbildes unter Beibehaltung des Seitenverhältnisses, sodass die gesamte Zielauflösung davon eingenommen wird, und schneiden Sie hervorstehende Teile ab
+Größe ändern und füllen - Ändern Sie die Größe des Quellbildes unter Beibehaltung des Seitenverhältnisses, sodass es vollständig zur Zielauflösung passt, und füllen Sie den leeren Raum mit Zeilen/Spalten aus dem Quellbild
+Beispiel: 
 
-Usually, when doing this, you would choose one of many images for the next iteration yourself, so the usefulness
-of this feature may be questionable, but I've managed to get some very nice outputs with it that I wasn't able
-to get otherwise.
+Auswahl der Probenahmemethode
+Wählen Sie aus mehreren Sampling-Methoden für txt2img aus:
 
-Example: (cherrypicked result)
 
-![](images/loopback.jpg)
 
-Original image by Anonymous user from 4chan. Thank you, Anonymous user.
+Seed-Größenänderung
+Mit dieser Funktion können Sie Bilder von bekannten Samen mit unterschiedlichen Auflösungen erzeugen. Wenn Sie die Auflösung ändern, ändert sich normalerweise das Bild vollständig, auch wenn Sie alle anderen Parameter einschließlich des Seeds beibehalten. Mit der Seed-Größenänderung geben Sie die Auflösung des Originalbilds an, und das Modell wird sehr wahrscheinlich etwas erzeugen, das ihm sehr ähnlich sieht, selbst bei einer anderen Auflösung. Im Beispiel unten ist das Bild ganz links 512 x 512, und andere werden mit genau denselben Parametern, aber mit größerer vertikaler Auflösung produziert.
 
-# X/Y plot
-Creates a grid of images with varying parameters. Select which parameters should be shared by rows and columns using
-X type and Y type fields, and input those parameters separated by comma into X values/Y values fields. For integer,
-and floating point numbers, and ranges are supported. Examples:
+Die Info	Bild
+Seed-Größenänderung nicht aktiviert	
+Größe des Seeds von 512 x 512 geändert	
+Ancestral Sampler sind darin etwas schlechter als die anderen.
 
-- Simple ranges:
-  - `1-5` = 1, 2, 3, 4, 5
-- Ranges with increment in bracket:
-  - `1-5 (+2)` = 1, 3, 5
-  - `10-5 (-3)` = 10, 7
-  - `1-3 (+0.5)` = 1, 1.5, 2, 2.5, 3
-- Ranges with the count in square brackets:
-  - `1-10 [5]` = 1, 3, 5, 7, 10
-  - `0.0-1.0 [6]` = 0.0, 0.2, 0.4, 0.6, 0.8, 1.0
+Sie finden diese Funktion, indem Sie auf das Kontrollkästchen "Extra" neben dem Seed klicken.
 
-![](images/xy_grid-medusa.png)
+Variationen
+Mit einem Variationsstärke-Schieberegler und einem Variations-Startfeld können Sie angeben, wie stark das vorhandene Bild geändert werden soll, damit es wie ein anderes aussieht. Bei maximaler Stärke erhalten Sie Bilder mit dem Variationssamen, mindestens Bilder mit dem ursprünglichen Samen (außer bei Verwendung von Ahnensammlern).
 
-Here are the settings that create the graph above:
 
-![](images/xy_grid-medusa-ui.png)
 
-### Prompt S/R
-Prompt S/R is one of more difficult to understand modes of operation for X/Y Plot. S/R stands for search/replace, and that's what it does - you input a list of words or phrases, it takes the first from the list and treats it as keyword, and replaces all instances of that keyword with other entries from  the list.
+Sie finden diese Funktion, indem Sie auf das Kontrollkästchen "Extra" neben dem Seed klicken.
 
-For example, with prompt `a man holding an apple, 8k clean`, and Prompt S/R `an apple, a watermelon, a gun` you will get three prompts:
+Stile
+Klicken Sie auf die Schaltfläche „Eingabeaufforderung als Stil speichern“, um Ihre aktuelle Eingabeaufforderung in die Datei „styles.csv“, die Datei mit einer Sammlung von Stilen, zu schreiben. Ein Dropdown-Feld rechts neben der Eingabeaufforderung ermöglicht es Ihnen, einen beliebigen Stil aus den zuvor gespeicherten auszuwählen und ihn automatisch an Ihre Eingabe anzuhängen. Um einen Stil zu löschen, löschen Sie ihn manuell aus der Datei styles.csv und starten Sie das Programm neu.
 
-- `a man holding an apple, 8k clean`
-- `a man holding a watermelon, 8k clean`
-- `a man holding a gun, 8k clean`
+Wenn Sie die spezielle Zeichenfolge {prompt}in Ihrem Stil verwenden, wird alles, was sich derzeit in der Eingabeaufforderung befindet, an dieser Position ersetzt, anstatt den Stil an Ihre Eingabeaufforderung anzuhängen.
 
-The list uses the same syntax as a line in a CSV file, so if you want to include commas into your entries you have to put text in quotes and make sure there is no space between quotes and separating commas:
+Negative Aufforderung
+Ermöglicht es Ihnen, eine weitere Eingabeaufforderung für Dinge zu verwenden, die das Modell beim Generieren des Bildes vermeiden sollte. Dies funktioniert, indem anstelle einer leeren Zeichenfolge die negative Aufforderung zur bedingungslosen Konditionierung im Sampling-Prozess verwendet wird.
 
-- `darkness, light, green, heat` - 4 items - `darkness`, `light`, `green`, `heat`
-- `darkness, "light, green", heat` - WRONG - 4 items - `darkness`, `"light`, `green"`, `heat`
-- `darkness,"light, green",heat` - RIGHT - 3 items - `darkness`, `light, green`, `heat`
+Erweiterte Erklärung: Negative Eingabeaufforderung
 
-# Textual Inversion
-Short explanation: place your embeddings into the `embeddings` directory, and use the filename in the prompt.
+Original	Negativ: lila	Negativ: Tentakel
+		
+CLIP-Interrogator
+Ursprünglich von: https://github.com/pharmapsychotic/clip-interrogator
 
-Long explanation: [Textual Inversion](Textual-Inversion)
+Mit dem CLIP-Interrogator können Sie die Eingabeaufforderung von einem Bild abrufen. Die Eingabeaufforderung erlaubt es Ihnen nicht, genau dieses Bild zu reproduzieren (und manchmal wird es nicht einmal annähernd sein), aber es kann ein guter Anfang sein.
 
-![grid-0037](https://user-images.githubusercontent.com/20920490/193285770-9454c5e1-e594-463c-8be8-1488ddf2877b.png)
 
-# Resizing
-There are three options for resizing input images in img2img mode:
 
-- Just resize - simply resizes the source image to the target resolution, resulting in an incorrect aspect ratio
-- Crop and resize - resize source image preserving aspect ratio so that entirety of target resolution is occupied by it, and crop parts that stick out
-- Resize and fill - resize source image preserving aspect ratio so that it entirely fits target resolution, and fill empty space by rows/columns from the source image
+Wenn Sie den CLIP-Interrogator zum ersten Mal ausführen, werden einige Gigabyte an Modellen heruntergeladen.
 
-Example:
-![](images/resizing.jpg)
+Der CLIP-Interrogator besteht aus zwei Teilen: Einer ist ein BLIP-Modell, das aus dem Bild eine Textbeschreibung erstellt. Anderes ist ein CLIP-Modell, das einige für das Bild relevante Zeilen aus einer Liste auswählt. Standardmäßig gibt es nur eine Liste - eine Liste von Künstlern (von artists.csv). Sie können weitere Listen hinzufügen, indem Sie wie folgt vorgehen:
 
-# Sampling method selection
-Pick out of multiple sampling methods for txt2img:
+erstellen interrogateSie das Verzeichnis am selben Ort wie webui
+Fügen Sie Textdateien mit einer relevanten Beschreibung in jeder Zeile ein
+Ein Beispiel für zu verwendende Textdateien finden Sie unter https://github.com/pharmapsychotic/clip-interrogator/tree/main/clip_interrogator/data . Tatsächlich können Sie einfach Dateien von dort nehmen und sie verwenden - überspringen Sie einfach die Datei "artists.txt", da Sie bereits eine Liste von Künstlern haben artists.csv(oder verwenden Sie diese auch, wer wird Sie daran hindern). Jede Datei fügt der endgültigen Beschreibung eine Textzeile hinzu. Wenn Sie ".top3." zu Dateiname, zum Beispiel , flavors.top3.txtwerden die drei relevantesten Zeilen aus dieser Datei zur Eingabeaufforderung hinzugefügt (andere Nummern funktionieren auch).
 
-![](images/sampling.jpg)
+Es gibt Einstellungen, die für diese Funktion relevant sind:
 
-# Seed resize
-This function allows you to generate images from known seeds at different resolutions. Normally, when you change resolution,
-the image changes entirely, even if you keep all other parameters including seed. With seed resizing you specify the resolution
-of the original image, and the model will very likely produce something looking very similar to it, even at a different resolution.
-In the example below, the leftmost picture is 512x512, and others are produced with exact same parameters but with larger vertical
-resolution.
+Interrogate: keep models in VRAM- Entladen Sie Interrogate-Modelle nicht aus dem Speicher, nachdem Sie sie verwendet haben. Für Benutzer mit viel VRAM.
+Interrogate: use artists from artists.csvartists.csv- fügt beim Verhör den Künstler hinzu . Kann nützlich sein, wenn Sie Ihre Künstlerliste im interrogateVerzeichnis haben
+Interrogate: num_beams for BLIP- Parameter, der beeinflusst, wie detailliert Beschreibungen aus dem BLIP-Modell sind (der erste Teil der generierten Eingabeaufforderung)
+Interrogate: minimum description length- Mindestlänge für den Text des BLIP-Modells
+Interrogate: maximum descripton length- maximale Länge für den Text des BLIP-Modells
+Interrogate: maximum number of lines in text file- Der Befrager berücksichtigt nur so viele erste Zeilen in einer Datei. Auf 0 eingestellt, ist der Standardwert 1500, was etwa so viel ist, wie eine 4-GB-Videokarte verarbeiten kann.
+Sofortige Bearbeitung
+xy_grid-0022-646033397
 
-| Info                      | Image                         |
-|---------------------------|-------------------------------|
-| Seed resize not enabled   | ![](images/seed-noresize.png) |
-| Seed resized from 512x512 | ![](images/seed-resize.png)   |
+Die sofortige Bearbeitung ermöglicht es Ihnen, mit dem Abtasten eines Bildes zu beginnen, aber in der Mitte zu etwas anderem zu wechseln. Die Basissyntax dafür lautet:
 
-Ancestral samplers are a little worse at this than the rest.
-
-You can find this feature by clicking the "Extra" checkbox near the seed.
-
-# Variations
-A Variation strength slider and Variation seed field allow you to specify how much the existing picture should be altered to look
-like a different one. At maximum strength, you will get pictures with the Variation seed, at minimum - pictures with the original Seed (except
-for when using ancestral samplers).
-
-![](images/seed-variations.jpg)
-
-You can find this feature by clicking the "Extra" checkbox near the seed.
-
-# Styles
-Press the "Save prompt as style" button to write your current prompt to styles.csv, the file with a collection of styles. A dropbox to
-the right of the prompt will allow you to choose any style out of previously saved, and automatically append it to your input.
-To delete a style, manually delete it from styles.csv and restart the program.
-
-if you use the special string `{prompt}` in your style, it will substitute anything currently in the prompt into that position, rather than appending the style to your prompt.
-
-# Negative prompt
-
-Allows you to use another prompt of things the model should avoid when generating the picture. This works by using the
-negative prompt for unconditional conditioning in the sampling process instead of an empty string.
-
-Advanced explanation: [Negative prompt](Negative-prompt)
-
-| Original                      | Negative: purple                | Negative: tentacles                |
-|-------------------------------|---------------------------------|------------------------------------|
-| ![](images/negative-base.png) | ![](images/negative-purple.png) | ![](images/negative-tentacles.png) |
-
-# CLIP interrogator
-
-Originally by: https://github.com/pharmapsychotic/clip-interrogator
-
-CLIP interrogator allows you to retrieve the prompt from an image. The prompt won't allow you to reproduce this
-exact image (and sometimes it won't even be close), but it can be a good start.
-
-![](images/CLIP-interrogate.png)
-
-The first time you run CLIP interrogator it will download a few gigabytes of models.
-
-CLIP interrogator has two parts: one is a BLIP model that creates a text description from the picture.
-Other is a CLIP model that will pick few lines relevant to the picture out of a list. By default, there
-is only one list - a list of artists (from `artists.csv`). You can add more lists by doing the following:
-
- - create `interrogate` directory in the same place as webui
- - put text files in it with a relevant description on each line
-
-For example of what text files to use, see https://github.com/pharmapsychotic/clip-interrogator/tree/main/clip_interrogator/data.
-In fact, you can just take files from there and use them - just skip artists.txt because you already have a list of
-artists in `artists.csv` (or use that too, who's going to stop you). Each file adds one line of text to the final description.
-If you add ".top3." to filename, for example, `flavors.top3.txt`, the three most relevant lines from this file will be
-added to the prompt (other numbers also work).
-
-There are settings relevant to this feature:
- - `Interrogate: keep models in VRAM` - do not unload Interrogate models from memory after using them. For users with a lot of VRAM.
- - `Interrogate: use artists from artists.csv` - adds artist from `artists.csv` when interrogating. Can be useful to disable when you have your list of artists in `interrogate` directory
- - `Interrogate: num_beams for BLIP` - parameter that affects how detailed descriptions from BLIP model are (the first part of generated prompt)
- - `Interrogate: minimum description length` - minimum length for BLIP model's text
- - `Interrogate: maximum descripton length` - maximum length for BLIP model's text
- - `Interrogate: maximum number of lines in text file` - interrogator will only consider this many first lines in a file. Set to 0, the default is 1500, which is about as much as a 4GB videocard can handle.
-
-# Prompt editing
-
-![xy_grid-0022-646033397](https://user-images.githubusercontent.com/20920490/190426933-9748708b-6db0-4cb0-8cb9-3285053916b8.jpg)
-
-Prompt editing allows you to start sampling one picture, but in the middle swap to something else. The base syntax for this is:
-
-```
 [from:to:when]
-```
+Wobei fromund towillkürliche Texte sind und wheneine Zahl ist, die definiert, wie spät im Abtastzyklus der Wechsel erfolgen soll. Je später es ist, desto weniger Kraft hat das Modell, um den toText anstelle von fromText zu zeichnen. Wenn wheneine Zahl zwischen 0 und 1 ist, ist dies ein Bruchteil der Anzahl der Schritte, nach denen gewechselt werden muss. Wenn es sich um eine Ganzzahl größer als Null handelt, ist dies nur der Schritt, nach dem der Wechsel vorgenommen wird.
 
-Where `from` and `to` are arbitrary texts, and `when` is a number that defines how late in the sampling cycle should the switch be made. The later it is, the less power the model has to draw the `to` text in place of `from` text. If `when` is a number between 0 and 1, it's a fraction of the number of steps after which to make the switch. If it's an integer greater than zero, it's just the step after which to make the switch.
+Das Verschachteln einer Eingabeaufforderung in einer anderen funktioniert.
 
-Nesting one prompt editing inside another does work.
+Zusätzlich:
 
-Additionally:
-- `[to:when]` - adds `to` to the prompt after a fixed number of steps (`when`)
-- `[from::when]` - removes `from` from the prompt after a fixed number of steps (`when`)
+[to:when]- fügt tonach einer festgelegten Anzahl von Schritten zur Eingabeaufforderung hinzu ( when)
+[from::when]- wird fromnach einer festgelegten Anzahl von Schritten aus der Eingabeaufforderung entfernt ( when)
+Beispiel: a [fantasy:cyberpunk:16] landscape
 
-Example:
-`a [fantasy:cyberpunk:16] landscape`
+Zu Beginn zeichnet das Modell a fantasy landscape.
+Nach Schritt 16 wechselt es zum Zeichnen a cyberpunk landscapeund macht dort weiter, wo es mit Fantasie aufgehört hat.
+Hier ist ein komplexeres Beispiel mit mehreren Bearbeitungen: fantasy landscape with a [mountain:lake:0.25] and [an oak:a christmas tree:0.75][ in foreground::0.6][ in background:0.25] [shoddy:masterful:0.5](Sampler hat 100 Schritte)
 
-- At start, the model will be drawing `a fantasy landscape`.
-- After step 16, it will switch to drawing `a cyberpunk landscape`, continuing from where it stopped with fantasy.
+am Anfang,fantasy landscape with a mountain and an oak in foreground shoddy
+nach Schritt 25,fantasy landscape with a lake and an oak in foreground in background shoddy
+nach Schritt 50,fantasy landscape with a lake and an oak in foreground in background masterful
+nach Schritt 60,fantasy landscape with a lake and an oak in background masterful
+nach Schritt 75,fantasy landscape with a lake and a christmas tree in background masterful
+Das Bild oben wurde mit der Eingabeaufforderung erstellt:
 
-Here's a more complex example with multiple edits:
-`fantasy landscape with a [mountain:lake:0.25] and [an oak:a christmas tree:0.75][ in foreground::0.6][ in background:0.25] [shoddy:masterful:0.5]` (sampler has 100 steps)
+„Offizielles Porträt eines lächelnden Generals aus dem Zweiten Weltkrieg, [männlich: weiblich: 0,99], fröhliches, glückliches, detailliertes Gesicht, 20. Jahrhundert, sehr detailliert, filmische Beleuchtung, digitale Kunstmalerei von Greg Rutkowski
 
-- at start, `fantasy landscape with a mountain and an oak in foreground shoddy`
-- after step 25, `fantasy landscape with a lake and an oak in foreground in background shoddy`
-- after step 50, `fantasy landscape with a lake and an oak in foreground in background masterful`
-- after step 60, `fantasy landscape with a lake and an oak in background masterful`
-- after step 75, `fantasy landscape with a lake and a christmas tree in background masterful`
+Und die Zahl 0,99 wird durch das ersetzt, was Sie in den Spaltenbeschriftungen auf dem Bild sehen.
 
-The picture at the top was made with the prompt:
+Die letzte Spalte im Bild ist [männlich:weiblich:0.0], was im Wesentlichen bedeutet, dass Sie das Modell bitten, von Anfang an eine Frau zu zeichnen, ohne mit einem männlichen General zu beginnen, und deshalb sieht es so anders aus als andere.
 
-`Official portrait of a smiling world war ii general, [male:female:0.99], cheerful, happy, detailed face, 20th century, highly detailed, cinematic lighting, digital art painting by Greg Rutkowski's
+Abwechselnde Wörter
+Bequeme Syntax zum Austauschen aller anderen Schritte.
 
-And the number 0.99 is replaced with whatever you see in column labels on the image.
+[cow|horse] in a field
+Bei Schritt 1 lautet die Eingabeaufforderung „Kuh auf einem Feld“. Schritt 2 ist "Pferd auf einem Feld". Schritt 3 ist „Kuh auf dem Feld“ und so weiter.
 
-The last column in the picture is [male:female:0.0], which essentially means that you are asking the model to draw a female from the start, without starting with a male general, and that is why it looks so different from others.
+Abwechselnde Wörter
 
-## Alternating Words
+Siehe erweitertes Beispiel unten. Bei Schritt 8 geht die Kette zurück von „Mann“ zu „Kuh“.
 
-Convenient Syntax for swapping every other step.
+[cow|cow|horse|man|siberian tiger|ox|man] in a field
+Prompt Editing wurde erstmals von Doggettx in diesem myspace.com-Beitrag implementiert .
 
-    [cow|horse] in a field
+Mieten. Fix
+Eine bequeme Option, um Ihr Bild teilweise mit einer niedrigeren Auflösung zu rendern, es hochzuskalieren und dann Details mit einer hohen Auflösung hinzuzufügen. Standardmäßig macht txt2img schreckliche Bilder bei sehr hohen Auflösungen, und das macht es möglich, die Verwendung der kleinen Bildkomposition zu vermeiden. Aktiviert durch Aktivieren des Kontrollkästchens "Hires. fix" auf der txt2img-Seite.
 
-On step 1, prompt is "cow in a field." Step 2 is "horse in a field." Step 3 is "cow in a field" and so on.
+Ohne	Mit
+00262-836728130	00261-836728130
+00345-950170121	00341-950170121
+Kleine Bilder werden mit der Auflösung gerendert, die Sie mit den Schiebereglern für Breite/Höhe festlegen. Die Abmessungen großer Bilder werden durch drei Schieberegler gesteuert: "Skalieren um"-Multiplikator (Hires Upscale), "Breite ändern auf" und/oder "Höhe ändern auf" (Hires-Größe ändern).
 
-![Alternating Words](https://user-images.githubusercontent.com/39339941/197556926-49ceb72b-daf3-4208-86f3-c2e7e9cd775a.gif)
+Wenn „Breite ändern auf“ und „Höhe ändern auf“ 0 sind, wird „Skalieren um“ verwendet.
+Wenn „Breite ändern auf“ 0 ist, wird „Höhe ändern auf“ aus Breite und Höhe berechnet.
+Wenn „Höhe ändern auf“ 0 ist, wird „Breite ändern auf“ aus Breite und Höhe berechnet.
+Wenn sowohl „Breite ändern auf“ als auch „Höhe ändern auf“ ungleich Null sind, wird das Bild auf mindestens diese Abmessungen hochskaliert und einige Teile werden abgeschnitten.
+Upscaler
+In einem Dropdown-Menü können Sie die Art des Upscalers auswählen, der zum Ändern der Bildgröße verwendet werden soll. Zusätzlich zu allen Hochskalierern, die Ihnen auf der Registerkarte „Extras“ zur Verfügung stehen, gibt es eine Option zum Hochskalieren eines latenten Raumbilds, mit dem die stabile Diffusion intern arbeitet – für ein 3x512x512-RGB-Bild wäre seine latente Raumdarstellung 4x64x64. Um zu sehen, was jeder latente Raum-Upscaler tut, können Sie die Denoising-Stärke auf 0 und die Hires-Schritte auf 1 setzen - Sie erhalten eine sehr gute Annäherung an die stabile Diffusion, mit der Sie bei einem hochskalierten Bild arbeiten würden.
 
+Nachfolgend finden Sie Beispiele dafür, wie verschiedene latente Upscale-Modi aussehen.
 
+Original
+00084-2395363541
+Latent, Latent (antialiased)	Latent (bikubisch), Latent (bikubisch, Antialiasing)	Latent (am nächsten)
+00071-2395363541	00073-2395363541	00077-2395363541
+Antialiased-Variationen wurden von einem Mitwirkenden veröffentlicht und scheinen mit Nicht-Antialiasing identisch zu sein.
 
+Zusammensetzbare Diffusion
+Eine Methode, um die Kombination mehrerer Eingabeaufforderungen zu ermöglichen. Kombinieren Sie Eingabeaufforderungen mit einem großgeschriebenen UND
 
-See more advanced example below. On step 8, the chain loops back from "man" to "cow."
+a cat AND a dog
+Unterstützt Gewichtungen für Eingabeaufforderungen: a cat :1.2 AND a dog AND a penguin :2.2 Der Standardwert für die Gewichtung ist 1. Dies kann sehr nützlich sein, um mehrere Einbettungen mit Ihrem Ergebnis zu kombinieren:creature_embedding in the woods:0.7 AND arcane_embedding:0.5 AND glitch_embedding:0.2
 
-    [cow|cow|horse|man|siberian tiger|ox|man] in a field
+Die Verwendung eines Werts unter 0,1 hat kaum einen Effekt. a cat AND a dog:0.03erzeugt im Grunde die gleiche Ausgabe wiea cat
 
-Prompt editing was first implemented by Doggettx in [this myspace.com post](https://www.reddit.com/r/StableDiffusion/comments/xas2os/simple_prompt2prompt_implementation_with_prompt/).
+Dies könnte praktisch sein, um fein abgestimmte rekursive Variationen zu generieren, indem Sie weitere Eingabeaufforderungen an Ihre Gesamtzahl anhängen.creature_embedding on log AND frog:0.13 AND yellow eyes:0.08
 
-# Hires. fix
-A convenience option to partially render your image at a lower resolution, upscale it, and then add details at a high resolution. By default, txt2img  makes horrible images at very high resolutions, and this makes it possible to avoid using the small picture's composition. Enabled by checking the "Hires. fix" checkbox on the txt2img page.
+Unterbrechen
+Drücken Sie die Unterbrechungstaste, um die aktuelle Verarbeitung zu stoppen.
 
-| Without                      | With                |
-|-------------------------------|---------------------------------|
-| ![00262-836728130](https://user-images.githubusercontent.com/20920490/191177752-ad983e62-8e1c-4197-8f3b-3165a6a6c31d.png) | ![00261-836728130](https://user-images.githubusercontent.com/20920490/191177785-395a951e-0d2e-4db7-9645-4c5af9321772.png) |
-| ![00345-950170121](https://user-images.githubusercontent.com/20920490/191178018-25dcd98d-6c45-4c31-ab7a-3de6c51c52e3.png) | ![00341-950170121](https://user-images.githubusercontent.com/20920490/191178048-3eba3db4-e5be-4617-9bfe-2cb36cebaafc.png) |
+4 GB Grafikkartenunterstützung
+Optimierungen für GPUs mit niedrigem VRAM. Damit sollte es möglich sein, 512x512 Bilder auf Grafikkarten mit 4GB Speicher zu erzeugen.
 
-Small picture is rendered at whatever resolution you set using width/height sliders.
-Large picture's dimensions are controlled by three sliders: "Scale by" multiplier (Hires upscale), "Resize width to" and/or "Resize height to" (Hires resize).
+--lowvramist eine Neuimplementierung einer Optimierungsidee von basujindal . Das Modell ist in Module unterteilt, und nur ein Modul wird im GPU-Speicher gehalten. Wenn ein anderes Modul ausgeführt werden muss, wird das vorherige aus dem GPU-Speicher entfernt. Die Art dieser Optimierung führt dazu, dass die Verarbeitung langsamer läuft – etwa zehnmal langsamer im Vergleich zum normalen Betrieb auf meiner RTX 3090.
 
-* If "Resize width to" and "Resize height to" are 0, "Scale by" is used.
-* If "Resize width to" is 0, "Resize height to" is calculated from width and height.
-* If "Resize height to" is 0, "Resize width to" is calculated from width and height.
-* If both "Resize width to" and "Resize height to" are non-zero, image is upscaled to be at least those dimensions, and some parts are cropped.
+--medvramist eine weitere Optimierung, die die VRAM-Nutzung erheblich reduzieren sollte, indem bedingtes und unbedingtes Denoising nicht im selben Batch verarbeitet werden.
 
-## Upscalers
+Diese Optimierungsimplementierung erfordert keine Modifikation des ursprünglichen Stable Diffusion-Codes.
 
-A dropdown allows you to to select the kind of upscaler to use for resizing the image. In addition to all upscalers you have available on extras tab, there is an option to upscale a latent space image, which is what stable diffusion works with internally - for a 3x512x512 RGB image, its latent space representation would be 4x64x64. To see what each latent space upscaler does, you can set Denoising strength to 0 and Hires steps to 1 - you'll get a very good approximation of that stable diffusion would be working with on upscaled image.
+Wiederherstellung des Gesichts
+Ermöglicht das Verbessern von Gesichtern in Bildern mit GFPGAN oder CodeFormer. Es gibt ein Kontrollkästchen in jeder Registerkarte, um die Gesichtswiederherstellung zu verwenden, und auch eine separate Registerkarte, mit der Sie nur die Gesichtswiederherstellung für jedes Bild verwenden können, mit einem Schieberegler, der steuert, wie sichtbar der Effekt ist. Sie können in den Einstellungen zwischen den beiden Methoden wählen.
 
-Below are examples of how different latent upscale modes look. 
+Original	GFPGAN	CodeFormer
+		
+Speichern
+Klicken Sie unter dem Ausgabeabschnitt auf die Schaltfläche Speichern, und die generierten Bilder werden in einem Verzeichnis gespeichert, das in den Einstellungen angegeben ist. Generierungsparameter werden an eine CSV-Datei im selben Verzeichnis angehängt.
 
-| Original                     |
-|------------------------------|
-| ![00084-2395363541](https://user-images.githubusercontent.com/20920490/210657893-0660c637-9f26-405e-83c9-3030e45fd5b0.png) | 
+Wird geladen
+Die Ladegrafik von Gradio wirkt sich sehr negativ auf die Verarbeitungsgeschwindigkeit des neuronalen Netzes aus. Meine RTX 3090 macht Bilder ca. 10% schneller wenn der Reiter mit Gradio nicht aktiv ist. Standardmäßig blendet die Benutzeroberfläche jetzt die Ladefortschrittsanimation aus und ersetzt sie durch statischen „Laden...“-Text, der den gleichen Effekt erzielt. Verwenden Sie die --no-progressbar-hidingBefehlszeilenoption, um dies rückgängig zu machen und Ladeanimationen anzuzeigen.
 
-| Latent, Latent (antialiased)                     | Latent (bicubic), Latent (bicubic, antialiased) | Latent (nearest)            |
-|------------------------------|------------------------------|------------------------------|
-| ![00071-2395363541](https://user-images.githubusercontent.com/20920490/210658048-d90ae87d-4534-4ca4-878b-9aaa4f43f901.png) | ![00073-2395363541](https://user-images.githubusercontent.com/20920490/210658501-c6a64c58-9343-470a-9f0b-6ae76c806725.png) | ![00077-2395363541](https://user-images.githubusercontent.com/20920490/210658607-ac5b5f30-af6a-4158-b968-9d1fdd6faf50.png) |
+Sofortige Validierung
+Stable Diffusion hat eine Begrenzung für die Eingabetextlänge. Wenn Ihre Eingabeaufforderung zu lang ist, erhalten Sie im Textausgabefeld eine Warnung, die anzeigt, welche Teile Ihres Textes abgeschnitten und vom Modell ignoriert wurden.
 
-Antialiased variations were PRd in by a contributor and seem to be the same as non-antialiased.
+Png-Informationen
+Fügt PNG Informationen über Generierungsparameter als Textabschnitt hinzu. Sie können diese Informationen später mit jeder Software anzeigen, die das Anzeigen von PNG-Chunk-Informationen unterstützt, zum Beispiel: https://www.nayuki.io/page/png-file-chunk-inspector
 
-# Composable Diffusion
+Einstellungen
+Eine Registerkarte mit Einstellungen ermöglicht es Ihnen, die Benutzeroberfläche zu verwenden, um mehr als die Hälfte der Parameter zu bearbeiten, die zuvor Befehlszeile waren. Die Einstellungen werden in der Datei config.js gespeichert. Einstellungen, die als Befehlszeilenoptionen verbleiben, sind diejenigen, die beim Start erforderlich sind.
 
-A method to allow the combination of multiple prompts.
-combine prompts using an uppercase AND
+Dateinamen-Format
+Das Images filename patternFeld auf der Registerkarte Einstellungen ermöglicht die Anpassung von generierten txt2img- und img2img-Bilddateinamen. Dieses Muster definiert die Generierungsparameter, die Sie in Dateinamen aufnehmen möchten, und ihre Reihenfolge. Die unterstützten Tags sind:
 
-    a cat AND a dog
+[steps], [cfg], [prompt], [prompt_no_styles], [prompt_spaces], [width], [height], [styles], [sampler], [seed], [model_hash], [prompt_words], [date], [datetime], [job_timestamp].
 
-Supports weights for prompts: `a cat :1.2 AND a dog AND a penguin :2.2`
-The default weight value is 1.
-It can be quite useful for combining multiple embeddings to your result: `creature_embedding in the woods:0.7 AND arcane_embedding:0.5 AND glitch_embedding:0.2` 
+Diese Liste wird sich jedoch mit neuen Ergänzungen weiterentwickeln. Sie können eine aktuelle Liste der unterstützten Tags abrufen, indem Sie in der Benutzeroberfläche mit der Maus über das Label „Bilddateinamenmuster“ fahren.
 
-Using a value lower than 0.1 will barely have an effect. `a cat AND a dog:0.03` will produce basically the same output as `a cat`
+Beispiel für ein Muster:[seed]-[steps]-[cfg]-[sampler]-[prompt_spaces]
 
-This could be handy for generating fine-tuned recursive variations, by continuing to append more prompts to your total. `creature_embedding on log AND frog:0.13 AND yellow eyes:0.08`
+Hinweis zu "Eingabeaufforderungs"-Tags: [prompt]fügt Unterstriche zwischen den Eingabeaufforderungswörtern ein, während [prompt_spaces]die Eingabeaufforderung intakt bleibt (einfacheres erneutes Kopieren/Einfügen in die Benutzeroberfläche). [prompt_words]ist eine vereinfachte und bereinigte Version Ihrer Eingabeaufforderung, die bereits zum Generieren von Unterverzeichnisnamen verwendet wird, nur mit den Wörtern Ihrer Eingabeaufforderung (ohne Satzzeichen).
 
+Wenn Sie dieses Feld leer lassen, wird das Standardmuster angewendet ( [seed]-[prompt_spaces]).
 
-# Interrupt
+Bitte beachten Sie, dass die Tags tatsächlich innerhalb des Musters ersetzt werden. Das bedeutet, dass Sie diesem Muster auch Nicht-Tag-Wörter hinzufügen können, um Dateinamen noch deutlicher zu machen. Zum Beispiel:s=[seed],p=[prompt_spaces]
 
-Press the Interrupt button to stop current processing.
+Benutzerskripte
+Wenn das Programm mit --allow-codeOption gestartet wird, steht unten auf der Seite unter Skripte -> Benutzerdefinierter Code ein zusätzliches Texteingabefeld für Skriptcode zur Verfügung. Es erlaubt Ihnen, Python-Code einzugeben, der die Arbeit mit dem Bild erledigt.
 
-# 4GB videocard support
-Optimizations for GPUs with low VRAM. This should make it possible to generate 512x512 images on videocards with 4GB memory.
+Greifen Sie im Code mithilfe der Variablen auf Parameter der Webbenutzeroberfläche zu und stellen Sie mithilfe der Funktion pAusgaben für die Webbenutzeroberfläche bereit . display(images, seed, info)Alle Globals aus dem Skript sind ebenfalls zugänglich.
 
-`--lowvram` is a reimplementation of an optimization idea by [basujindal](https://github.com/basujindal/stable-diffusion).
-Model is separated into modules, and only one module is kept in GPU memory; when another module needs to run, the previous
-is removed from GPU memory. The nature of this optimization makes the processing run slower -- about 10 times slower
-compared to normal operation on my RTX 3090.
+Ein einfaches Skript, das das Bild nur verarbeitet und normal ausgibt:
 
-`--medvram` is another optimization that should reduce VRAM usage significantly by not processing conditional and
-unconditional denoising in the same batch.
-
-This implementation of optimization does not require any modification to the original Stable Diffusion code.
-
-# Face restoration
-Lets you improve faces in pictures using either GFPGAN or CodeFormer. There is a checkbox in every tab to use face restoration,
-and also a separate tab that just allows you to use face restoration on any picture, with a slider that controls how visible
-the effect is. You can choose between the two methods in settings.
-
-| Original                | GFPGAN                         | CodeFormer                         |
-|-------------------------|--------------------------------|------------------------------------|
-| ![](images/facefix.png) | ![](images/facefix-gfpgan.png) | ![](images/facefix-codeformer.png) |
-
-
-# Saving
-Click the Save button under the output section, and generated images will be saved to a directory specified in settings;
-generation parameters will be appended to a csv file in the same directory.
-
-# Loading
-Gradio's loading graphic has a very negative effect on the processing speed of the neural network.
-My RTX 3090 makes images about 10% faster when the tab with gradio is not active. By default, the UI
-now hides loading progress animation and replaces it with static "Loading..." text, which achieves
-the same effect. Use the `--no-progressbar-hiding` commandline option to revert this and show loading animations.
-
-# Prompt validation
-Stable Diffusion has a limit for input text length. If your prompt is too long, you will get a
-warning in the text output field, showing which parts of your text were truncated and ignored by the model.
-
-# Png info
-Adds information about generation parameters to PNG as a text chunk. You
-can view this information later using any software that supports viewing
-PNG chunk info, for example: https://www.nayuki.io/page/png-file-chunk-inspector
-
-# Settings
-A tab with settings, allows you to use UI to edit more than half of parameters that previously
-were commandline. Settings are saved to config.js file. Settings that remain as commandline
-options are ones that are required at startup.
-
-# Filenames format
-The `Images filename pattern` field in the Settings tab allows customization of generated txt2img and img2img images filenames. This pattern defines the generation parameters you want to include in filenames and their order. The supported tags are:
-
-`[steps], [cfg], [prompt], [prompt_no_styles], [prompt_spaces], [width], [height], [styles], [sampler], [seed], [model_hash], [prompt_words], [date], [datetime], [job_timestamp].`
-
-This list will evolve though, with new additions. You can get an up-to-date list of supported tags by hovering your mouse over the "Images filename pattern" label in the UI.
-
-Example of a pattern: `[seed]-[steps]-[cfg]-[sampler]-[prompt_spaces]`
-
-Note about "prompt" tags: `[prompt]` will add underscores between the prompt words, while `[prompt_spaces]` will keep the prompt intact (easier to copy/paste into the UI again). `[prompt_words]` is a simplified and cleaned-up version of your prompt, already used to generate subdirectories names, with only the words of your prompt (no punctuation).
-
-If you leave this field empty, the default pattern will be applied (`[seed]-[prompt_spaces]`).
-
-Please note that the tags are actually replaced inside the pattern. It means that you can also add non-tags words to this pattern, to make filenames even more explicit. For example: `s=[seed],p=[prompt_spaces]`
-
-# User scripts
-If the program is launched with `--allow-code` option, an extra text input field for script code
-is available at the bottom of the page, under Scripts -> Custom code. It allows you to input python
-code that will do the work with the image.
-
-In code, access parameters from web UI using the `p` variable, and provide outputs for web UI
-using the `display(images, seed, info)` function. All globals from the script are also accessible.
-
-A simple script that would just process the image and output it normally:
-
-```python
 import modules.processing
 
 processed = modules.processing.process_images(p)
@@ -542,92 +417,82 @@ processed = modules.processing.process_images(p)
 print("Seed was: " + str(processed.seed))
 
 display(processed.images, processed.seed, processed.info)
-```
+UI-Konfig
+Sie können Parameter für UI-Elemente ändern:
 
-# UI config
-You can change parameters for UI elements:
- - radio groups: default selection
- - sliders: default value, min, max, step
- - checkboxes: checked state
- - text and number inputs: default values
+Funkgruppen: Standardauswahl
+Schieberegler: Standardwert, Min, Max, Schritt
+Kontrollkästchen: aktivierter Zustand
+Text- und Zahleneingaben: Standardwerte
+Die Datei ist ui-config.json im webui-Verzeichnis und wird automatisch erstellt, wenn Sie beim Programmstart keine haben.
 
-The file is ui-config.json in webui dir, and it is created automatically if you don't have one when the program starts.
+Kontrollkästchen, die normalerweise einen versteckten Abschnitt erweitern würden, tun dies zunächst nicht, wenn sie als UI-Konfigurationseinträge festgelegt werden.
 
-Checkboxes that would usually expand a hidden section will not initially do so when set as UI config entries.
+Einige Einstellungen unterbrechen die Verarbeitung, wie z. B. Schritt, der für Breite und Höhe nicht durch 64 teilbar ist, und andere, wie das Ändern der Standardfunktion auf der Registerkarte img2img, können die Benutzeroberfläche unterbrechen. Ich habe nicht vor, diese in naher Zukunft anzusprechen.
 
-Some settings will break processing, like step not divisible by 64 for width and height, and some, like changing the default
-function on the img2img tab, may break UI. I do not have plans to address those in near future.
+ESRGAN
+Es ist möglich, ESRGAN-Modelle auf der Registerkarte Extras sowie in SD Upscale zu verwenden.
 
-# ESRGAN
-It's possible to use ESRGAN models on the Extras tab, as well as in SD upscale.
+Um ESRGAN-Modelle zu verwenden, legen Sie sie im ESRGAN-Verzeichnis am selben Speicherort wie webui.py ab. Eine Datei wird als Modell geladen, wenn sie die Erweiterung .pth hat. Holen Sie sich Modelle aus der Modelldatenbank .
 
-To use ESRGAN models, put them into ESRGAN directory in the same location as webui.py.
-A file will be loaded as a model if it has .pth extension. Grab models from the [Model Database](https://upscale.wiki/wiki/Model_Database).
+Nicht alle Modelle aus der Datenbank werden unterstützt. Alle 2x-Modelle werden höchstwahrscheinlich nicht unterstützt.
 
-Not all models from the database are supported. All 2x models are most likely not supported.
+img2img alternativer Test
+Dekonstruiert ein Eingabebild unter Verwendung einer Umkehrung des Euler-Diffusors, um das Rauschmuster zu erstellen, das zum Erstellen der Eingabeaufforderung verwendet wird.
 
-# img2img alternative test
-Deconstructs an input image using a reverse of the Euler diffuser to create the noise pattern used to construct the input prompt.
+Als Beispiel können Sie dieses Bild verwenden. Wählen Sie den alternativen Test img2img aus dem Skriptabschnitt aus .
 
-As an example, you can use this image. Select the img2img alternative test from the *scripts* section.
+alt_src
 
-![alt_src](https://user-images.githubusercontent.com/1633844/191771623-6293ec7b-c1c0-425c-9fe9-9d03313761fb.png)
+Passen Sie Ihre Einstellungen für den Rekonstruktionsprozess an:
 
-Adjust your settings for the reconstruction process:
-- Use a brief description of the scene: "A smiling woman with brown hair." Describing features you want to change helps. Set this as your starting prompt, and 'Original Input Prompt' in the script settings.
-- You *MUST* use the Euler sampling method, as this script is built on it.
-- Sampling steps: 50-60. This MUCH match the decode steps value in the script, or you'll have a bad time. Use 50 for this demo.
-- CFG scale: 2 or lower. For this demo, use 1.8. (Hint, you can edit ui-config.json to change "img2img/CFG Scale/step" to .1 instead of .5.
-- Denoising strength - this *does* matter, contrary to what the old docs said. Set it to 1.
-- Width/Height - Use the width/height of the input image.
-- Seed...you can ignore this. The reverse Euler is generating the noise for the image now.
-- Decode cfg scale - Somewhere lower than 1 is the sweet spot. For the demo, use 1.
-- Decode steps - as mentioned above, this should match your sampling steps. 50 for the demo, consider increasing to 60 for more detailed images.
+Verwenden Sie eine kurze Beschreibung der Szene: "Eine lächelnde Frau mit braunen Haaren." Es hilft, Funktionen zu beschreiben, die Sie ändern möchten. Legen Sie dies als Ihre Startaufforderung und „Ursprüngliche Eingabeaufforderung“ in den Skripteinstellungen fest.
+Sie MÜSSEN die Euler-Stichprobenmethode verwenden, da dieses Skript darauf aufbaut.
+Abtastschritte: 50-60. Dies VIEL stimmt mit dem Wert der Dekodierungsschritte im Skript überein, oder Sie werden eine schlechte Zeit haben. Verwenden Sie 50 für diese Demo.
+CFG-Skala: 2 oder niedriger. Verwenden Sie für diese Demo 1.8. (Hinweis, Sie können ui-config.json bearbeiten, um "img2img/CFG Scale/step" auf .1 statt .5 zu ändern.
+Denoising-Stärke - dies spielt eine Rolle, im Gegensatz zu dem, was die alten Dokumente sagten. Setzen Sie es auf 1.
+Breite/Höhe – Verwenden Sie die Breite/Höhe des Eingabebilds.
+Seed ... das kannst du ignorieren. Der umgekehrte Euler erzeugt jetzt das Rauschen für das Bild.
+Decode cfg scale - Irgendwo unter 1 ist der Sweet Spot. Verwenden Sie für die Demo 1.
+Dekodierungsschritte - wie oben erwähnt, sollte dies mit Ihren Sampling-Schritten übereinstimmen. 50 für die Demo, erwägen Sie eine Erhöhung auf 60 für detailliertere Bilder.
+Sobald alle oben genannten Punkte eingegeben sind, sollten Sie in der Lage sein, auf "Generieren" zu klicken und ein Ergebnis zu erhalten, das dem Original sehr nahe kommt.
 
-Once all of the above are dialed in, you should be able to hit "Generate" and get back a result that is a *very* close approximation to the original.
+Nachdem Sie überprüft haben, dass das Skript das Quellfoto mit einem guten Maß an Genauigkeit neu generiert, können Sie versuchen, die Details der Eingabeaufforderung zu ändern. Größere Variationen des Originals führen wahrscheinlich zu einem Bild mit einer völlig anderen Zusammensetzung als die Quelle.
 
-After validating that the script is re-generating the source photo with a good degree of accuracy, you can try to change the details of the prompt. Larger variations of the original will likely result in an image with an entirely different composition than the source.
+Beispielausgaben mit den obigen Einstellungen und Eingabeaufforderungen unten (Rotes Haar/Pony nicht abgebildet)
 
-Example outputs using the above settings and prompts below (Red hair/pony not pictured)
+Demo
 
-![demo](https://user-images.githubusercontent.com/1633844/191776138-c77bf232-1981-47c9-a4d3-ae155631f5c8.png)
+"Eine lächelnde Frau mit blauen Haaren." Funktioniert. "Eine stirnrunzelnde Frau mit braunen Haaren." Funktioniert. "Eine stirnrunzelnde Frau mit roten Haaren." Funktioniert. "Eine stirnrunzelnde Frau mit roten Haaren, die auf einem Pferd reitet." Scheint die Frau vollständig zu ersetzen, und jetzt haben wir ein rotes Pony.
 
-"A smiling woman with blue hair." Works.
-"A frowning woman with brown hair." Works.
-"A frowning woman with red hair." Works.
-"A frowning woman with red hair riding a horse." Seems to replace the woman entirely, and now we have a ginger pony.
+user.css
+Erstellen Sie eine Datei namens user.cssnear webui.pyund fügen Sie benutzerdefinierten CSS-Code ein. Dadurch wird die Galerie beispielsweise größer:
 
-# user.css
-Create a file named `user.css` near `webui.py` and put custom CSS code into it. For example, this makes the gallery taller:
-
-```css
 #txt2img_gallery, #img2img_gallery{
     min-height: 768px;
 }
-```
-A useful tip is you can append `/?__theme=dark` to your webui url to enable a built in *dark theme*
-<br>e.g. (`http://127.0.0.1:7860/?__theme=dark`)
+Ein nützlicher Tipp ist, dass Sie /?__theme=darkan Ihre Webui-URL anhängen können, um ein eingebautes dunkles Thema
+zu aktivieren, z. ( http://127.0.0.1:7860/?__theme=dark)
 
-Alternatively, you can add the `--theme=dark` to the `set COMMANDLINE_ARGS=` in `webui-user.bat`<br>
-e.g. `set COMMANDLINE_ARGS=--theme=dark`
+Alternativ können Sie --theme=darkdas set COMMANDLINE_ARGS=in webui-user.bat
+zB hinzufügenset COMMANDLINE_ARGS=--theme=dark
 
+chrome_O1kvfKs1es
 
-![chrome_O1kvfKs1es](https://user-images.githubusercontent.com/39339941/197560013-51e535d6-7cef-4946-ab6b-747e1c76b007.png)
+Benachrichtigung.mp3
+Wenn eine benannte Audiodatei notification.mp3im Stammordner von webui vorhanden ist, wird sie abgespielt, wenn der Generierungsprozess abgeschlossen ist.
 
-# notification.mp3
-If an audio file named `notification.mp3` is present in webui's root folder, it will be played when the generation process completes.
+Als Inspirationsquelle:
 
-As a source of inspiration:
-* https://pixabay.com/sound-effects/search/ding/?duration=0-30
-* https://pixabay.com/sound-effects/search/notification/?duration=0-30
+https://pixabay.com/sound-effects/search/ding/?duration=0-30
+https://pixabay.com/sound-effects/search/notification/?duration=0-30
+Optimierungen
+Ignoriere die letzten Schichten des CLIP-Modells
+Dies ist ein Schieberegler in den Einstellungen und steuert, wie früh die Verarbeitung der Eingabeaufforderung durch das CLIP-Netzwerk gestoppt werden soll.
 
-# Tweaks
+Eine genauere Erklärung:
 
-## Ignore last layers of CLIP model
-This is a slider in settings, and it controls how early the processing of prompt by CLIP network should be stopped.
+CLIP ist ein sehr fortschrittliches neuronales Netzwerk, das Ihren Eingabeaufforderungstext in eine numerische Darstellung umwandelt. Neuronale Netze funktionieren sehr gut mit dieser numerischen Darstellung, und deshalb wählten Entwickler von SD CLIP als eines von drei Modellen, die an der Methode der stabilen Diffusion zur Erzeugung von Bildern beteiligt sind. Da CLIP ein neuronales Netzwerk ist, bedeutet dies, dass es viele Schichten hat. Ihre Eingabeaufforderung wird auf einfache Weise digitalisiert und dann durch Schichten geführt. Sie erhalten eine numerische Darstellung der Eingabeaufforderung nach der ersten Schicht, Sie speisen diese in die zweite Schicht ein, Sie speisen das Ergebnis davon in die dritte usw., bis Sie zur letzten Schicht gelangen, und das ist die Ausgabe von CLIP, die in Stable verwendet wird Diffusion. Dies ist der Schiebereglerwert von 1. Aber Sie können früher aufhören und die Ausgabe der vorletzten Ebene verwenden - das ist der Schiebereglerwert von 2. Je früher Sie aufhören,
 
-A more detailed explanation:
+Einige Modelle wurden mit dieser Art von Optimierung trainiert, sodass das Festlegen dieses Werts dazu beiträgt, bessere Ergebnisse bei diesen Modellen zu erzielen.
 
-CLIP is a very advanced neural network that transforms your prompt text into a numerical representation. Neural networks work very well with this numerical representation and that's why devs of SD chose CLIP as one of 3 models involved in stable diffusion's method of producing images. As CLIP is a neural network, it means that it has a lot of layers. Your prompt is digitized in a simple way, and then fed through layers. You get numerical representation of the prompt after the 1st layer, you feed that into the second layer, you feed the result of that into third, etc, until you get to the last layer, and that's the output of CLIP that is used in stable diffusion. This is the slider value of 1. But you can stop early, and use the output of the next to last layer - that's slider value of 2. The earlier you stop, the less layers of neural network have worked on the prompt.
-
-Some models were trained with this kind of tweak, so setting this value helps produce better results on those models.
