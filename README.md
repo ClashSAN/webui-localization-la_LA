@@ -6,3 +6,7 @@ See this commit's [comment in the code](https://github.com/AUTOMATIC1111/stable-
 Translators should add other translators as **collaborators** so that they can both edit the file.
 
 [Extensions index](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Extensions-index)
+
+
+ 
+[wikitest](https://github.com/ClashSAN/webui-localization-la_LA/blob/wikitest/README.md)
